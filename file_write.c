@@ -48,8 +48,8 @@ void test(char *path, bool sequential) {
 
         int err = ftruncate(fd_list[i], FILE_SIZE_WR);
         if (err != 0) {
-            printf("Could not set size for file %s. Error = %d\n",
-                   my_file, err);
+            printf("Could not set size for file %s. Error = %s\n",
+                   my_file, strerror(err));
             exit(1);
         }
     }

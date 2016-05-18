@@ -312,7 +312,7 @@ bool write_sequential(struct share_it* my_state) {
             RDTSCP(end);
              if (bytes <= 0 || bytes != my_state->block_size) {
                 int err = errno;
-                printf("write failed with err=%d and bytes =%d while block_size=%zu\n", errno, bytes, my_state->block_size);
+                printf("write failed with err=%s and bytes =%d while block_size=%zu\n", strerror(errno), bytes, my_state->block_size);
                 return false;
              }
             dummy_call(my_state->buf);
@@ -365,15 +365,18 @@ bool write_random(struct share_it* my_state) {
 */
             if (lseek(fd, my_state->offsets[j] * BLOCK_SIZE, SEEK_SET) == -1) {
                 int err = errno;
-                printf("Seek to start of file failed with errno %d\n",
-                       err);
+                printf("Seek to start of file failed with errno %s\n",
+                       strerror(err));
                 exit(1);
             }
             RDTSCP(start);
             bytes = write(fd, my_state->buf, my_state->block_size);
             RDTSCP(end);
-             if (bytes <= 0 || bytes != my_state->block_size)
+            if (bytes <= 0 || bytes != my_state->block_size) {
+                int err = errno;
+                printf("write failed with err=%s and bytes =%d while block_size=%zu\n", strerror(errno), bytes, my_state->block_size);
                 return false;
+            }
             dummy_call(my_state->buf);
             *(my_state->total_bytes) += bytes;
             my_state->duration  += (end - start);

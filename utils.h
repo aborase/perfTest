@@ -29,7 +29,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #define SWAP(a,b)           { int tmp = *a; *a = *b; *b = tmp;}
 #define FLAGS               (O_RDONLY | O_SYNC | O_DIRECT)
-#define WR_FLAGS            (O_RDWR | O_CREAT | O_SYNC | O_DIRECT)
+#define WR_FLAGS            (O_RDWR | O_CREAT)
 
 // Set some defaults
 extern int LOOP_COUNTER;

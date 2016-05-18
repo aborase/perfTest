@@ -45,9 +45,9 @@ int main(int argc, char *argv[]) {
 
     int cache = 400 * 1024 * 1024;
 
-    char dir[14][6] = {"", "dir1", "dir2", "dir3", "dir4", "dir5", "dir6",
+    char dir[19][6] = {"", "dir1", "dir2", "dir3", "dir4", "dir5", "dir6",
                        "dir7", "dir8", "dir9", "dir10", "dir11", "dir12",
-                       "dir13"};
+                       "dir13", "dir14", "dir15", "dir16", "dir17", "dir18"};
 
     int i = 1;
     for (i = 1; i < count; i++) {
