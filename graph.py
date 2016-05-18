@@ -4,60 +4,75 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import pprint
-def main(type, freq):
-    if type == "small":
-        File=["small_write_seq","small_write_random"]
-    else:
-        File=["big_write_seq","big_write_random"]
-
+def main(op, type, freq):
     output=[]
-    outputs=[0,1]
-    is_seq=0
+    is_rand=0
+    is_ext4=0
+    File=["data/"+type+"_"+op+"_seq", "data/"+type+"_"+op+"_random"]
     for fl in File:
         with open(fl) as f:
             content = f.readlines()
             cycles=[]
-            #output.append(is_seq,0,0)
+            #output.append(is_rand, 0, 0)
             for entry in content:
                 if entry=='\n':
                     cycles=np.array(cycles)
                     avg=mean(cycles)
-                    output.append((is_seq,size,avg))
+                    output.append((is_ext4, is_rand, size, avg))
                     cycles=[]
                 else:
                     size=int(entry.split(",")[0])
                     cycle=float(entry.split(",")[1])
                     cycles.append(cycle)
-        is_seq=1
+        is_rand=1
 
-    xaxis=[]
-    yaxis=[]
-    for e in outputs:
-        x=[]
-        y=[]
-        for entry in output:
-            if e == entry[0]:
-                #x.append(math.log(entry[1],2))
-                x.append(entry[1])
-                y.append(entry[2]/freq)
-        xaxis.append(x)
-        yaxis.append(y)
-        print len(x)
+    is_rand=0
+    is_ext4=1
+    File=["data/"+type+"_"+op+"_seq_ext4", "data/"+type+"_"+op+"_random_ext4"]
+    for fl in File:
+        with open(fl) as f:
+            content = f.readlines()
+            cycles=[]
+            #output.append(is_rand, 0, 0)
+            for entry in content:
+                if entry=='\n':
+                    cycles=np.array(cycles)
+                    avg=mean(cycles)
+                    output.append((is_ext4, is_rand, size, avg))
+                    cycles=[]
+                else:
+                    size=int(entry.split(",")[0])
+                    cycle=float(entry.split(",")[1])
+                    cycles.append(cycle)
+        is_rand=1
 
-    i=0
-    fig=plt.figure()
+    fig=plt.figure(op + " latency for " + type + " files")
     plt.subplot(111)
     plt.grid(True)
-    plt.title("Write Latency for " + type + " files")
-    plt.ylabel('Latency in nano seconds')
-    plt.xlabel('File size in bytes')
-    while i<len(xaxis):
-        if i==0:
-            s="Sequential"
-        else:
-            s="Random"
-        plt.plot(xaxis[i],yaxis[i], linestyle='--', marker='o', label=(s+" writes"))
-        i+=1
+    plt.title(op + " latency for " + type + " files")
+    plt.ylabel('latency in nano seconds')
+    plt.xlabel('file size in bytes')
+    for e1 in [0,1]:
+        for e2 in [0,1]:
+            x=[]
+            y=[]
+            for entry in output:
+                if e1 == entry[0] and e2 == entry[1]:
+                    #x.append(math.log(entry[1],2))
+                    x.append(entry[2])
+                    y.append(entry[3]/freq)
+
+            if e1==0 and e2==0:
+                s="nova/sequential " + op
+            elif e1==0 and e2==1:
+                s="nova/random " + op
+            elif e1==1 and e2==0:
+                s="ext4/sequential " + op
+            else:
+                s="ext4/random " + op
+            print len(x)
+            plt.plot(x, y, linestyle='--', marker='o', label=s)
+
     plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),fancybox=True, shadow=True, ncol=5)
     plt.show()
 
@@ -65,4 +80,5 @@ def mean(entries):
     return np.mean(entries, axis=0)
 
 if __name__=="__main__":
-    main(str(sys.argv[1]), float(sys.argv[2]))
+    print "Usage: python graph.py <read/write> <small/big> <freq>"
+    main(str(sys.argv[1]), str(sys.argv[2]), float(sys.argv[3]))

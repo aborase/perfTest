@@ -19,14 +19,15 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    int small_files[10]   = {0, 64, 128, 256, 512, 1024, 4096, 8192,
-                             12288, 16384};
-    int small_count = 10;
+    int small_files[14]   = {0, 64, 128, 256, 512, 1024, 2048, 4096,
+                             6144, 8192, 10240, 12288, 14336, 16384};
+    int small_count = 14;
 
-    int big_files[14] = {0, 32768, 65536, 131072, 262144,
-                         524288, 1048576, 4194304, 8388608, 16777216,
-                         33554432, 134217728, 268435456, 536870912};
-    int big_count = 14;
+    int big_files[19] = {0, 32768, 65536, 131072, 262144,
+                         524288, 1048576, 2097152, 4194304, 8388608, 16777216,
+                         25165824, 33554432, 67108864, 100663296, 134217728,
+                         268435456, 402653184, 536870912};
+    int big_count = 19;
 
     int count = 0;
 
@@ -87,11 +88,18 @@ int main(int argc, char *argv[]) {
         printf("%s\n", cmd);
 
         int j = 0;
-        for (j = 0; j < 10; j++) {
+        for (j = 0; j < 5; j++) {
             system(cmd);
         }
-        printf("\n");
 
+        int out = open("results.txt", O_CREAT | O_RDWR);
+        if (lseek(out, 0, SEEK_END) == -1) {
+            int err = errno;
+            printf("Seek to end of file failed with errno %d\n", err);
+            exit(1);
+        }
+
+        write(out, "\n", strlen("\n"));
     }
 
 }
