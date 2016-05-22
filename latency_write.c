@@ -28,7 +28,13 @@ int main(int argc, char *argv[]) {
                          25165824, 33554432, 67108864, 100663296, 134217728,
                          268435456, 402653184, 536870912};
     int big_count = 19;
-
+/*
+    int big_files[24] = {0, 4096, 8192, 12288, 16384, 24576, 32768, 65536, 131072, 262144,
+                         524288, 1048576, 2097152, 4194304, 8388608, 16777216,
+                         25165824, 33554432, 67108864, 100663296, 134217728,
+                         268435456, 402653184, 536870912};
+    int big_count = 24;
+*/
     int count = 0;
 
     int block_size = 0;
@@ -40,14 +46,16 @@ int main(int argc, char *argv[]) {
     } else {
         array = big_files;
         block_size = 32 * 1024;
+        //block_size = 4 * 1024;
         count = big_count;
     }
 
     int cache = 400 * 1024 * 1024;
 
-    char dir[19][6] = {"", "dir1", "dir2", "dir3", "dir4", "dir5", "dir6",
+    char dir[24][6] = {"", "dir1", "dir2", "dir3", "dir4", "dir5", "dir6",
                        "dir7", "dir8", "dir9", "dir10", "dir11", "dir12",
-                       "dir13", "dir14", "dir15", "dir16", "dir17", "dir18"};
+                       "dir13", "dir14", "dir15", "dir16", "dir17", "dir18",
+                       "dir19", "dir20", "dir21", "dir22", "dir23"};
 
     int i = 1;
     for (i = 1; i < count; i++) {
@@ -88,7 +96,7 @@ int main(int argc, char *argv[]) {
         printf("%s\n", cmd);
 
         int j = 0;
-        for (j = 0; j < 5; j++) {
+        for (j = 0; j < 8; j++) {
             system(cmd);
         }
 
